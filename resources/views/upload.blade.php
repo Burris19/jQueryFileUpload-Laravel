@@ -57,6 +57,7 @@
                     <span>Add files...</span>
                     <input type="file" name="files[]" multiple>
                 </span>
+<!--
                 <button type="submit" class="btn btn-primary start">
                     <i class="glyphicon glyphicon-upload"></i>
                     <span>Start upload</span>
@@ -69,9 +70,21 @@
                     <i class="glyphicon glyphicon-trash"></i>
                     <span>Delete</span>
                 </button>
-                <input type="checkbox" class="toggle">
+                <button type="button" class="btn btn-info pupa">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>prueba</span>
+                </button>
+-->
+<!--                <input type="checkbox" class="toggle">-->
                 <!-- The global file processing state -->
-                <span class="fileupload-process"></span>
+                <span class="fileupload-process"></span>                
+                <p id="loadigText" style="display:none">
+                    <span id="texto">Subiendo imagenes</span>                    
+                    <span id="fotoInicio">0</span>
+                    de
+                    <span id="fotoFinal"></span>                    
+                    <img src="ajax-loader.gif" id="gif">
+                </p>                  
             </div>
             <!-- The global progress state -->
             <div class="col-lg-5 fileupload-progress fade">
@@ -88,19 +101,7 @@
     </form>
     <br>
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Demo Notes</h3>
-        </div>
-        <div class="panel-body">
-            <ul>
-                <li>The maximum file size for uploads in this demo is <strong>999 KB</strong> (default file size is unlimited).</li>
-                <li>Only image files (<strong>JPG, GIF, PNG</strong>) are allowed in this demo (by default there is no file type restriction).</li>
-                <li>Uploaded files will be deleted automatically after <strong>5 minutes or less</strong> (demo files are stored in memory).</li>
-                <li>You can <strong>drag &amp; drop</strong> files from your desktop on this webpage (see <a href="https://github.com/blueimp/jQuery-File-Upload/wiki/Browser-support">Browser support</a>).</li>
-                <li>Please refer to the <a href="https://github.com/blueimp/jQuery-File-Upload">project website</a> and <a href="https://github.com/blueimp/jQuery-File-Upload/wiki">documentation</a> for more information.</li>
-                <li>Built with the <a href="http://getbootstrap.com/">Bootstrap</a> CSS framework and Icons from <a href="http://glyphicons.com/">Glyphicons</a>.</li>
-            </ul>
-        </div>
+
     </div>
 </div>
 <!-- The blueimp Gallery widget -->
@@ -226,10 +227,12 @@
 
 <script>
     $(function () {
+        'use strict';
         var cargados = 0;
         var totalFotos = 0;
-
-        'use strict';
+        var subidas = 0;
+        var files = null;
+        
         var jupload = $('#fileupload');
         // Initialize the jQuery File Upload widget:
         jupload.fileupload({
@@ -243,41 +246,45 @@
         $('#fileupload')
                 .bind('fileuploadadd', function (e, data) {
                     totalFotos +=1;
-                    console.log('se subieron estas fotos' + ' ' + totalFotos);
-                }) /*Contar*/
-//                .bind('fileuploadsubmit', function (e, data) {alert('Hola soy 2');})/*Presionar el boton enviar */
-//                .bind('fileuploadsend', function (e, data) {alert('Hola soy 3');}) /* */
-//                .bind('fileuploaddone', function (e, data) {alert('Hola soy 4 ');})
-//                .bind('fileuploadfail', function (e, data) {alert('Hola soy 5');})
-//                .bind('fileuploadalways', function (e, data) {alert('Hola soy 6');})
-//                .bind('fileuploadprogress', function (e, data) {alert('Hola soy 7');})
-//                .bind('fileuploadprogressall', function (e, data) {alert('Hola soy 8');})
-//                .bind('fileuploadstart', function (e) {alert('Hola soy 9');}) /*iniciar*/
-//                .bind('fileuploadstop', function (e) {alert('Hola soy 10');})
-//                .bind('fileuploadchange', function (e, data) { alert('Hola soy ') })/* Termina se seleccionar*/
-//                .bind('fileuploadpaste', function (e, data) {alert('Hola soy 12');})
-//                .bind('fileuploaddrop', function (e, data) {alert('Hola soy 13');})
-//                .bind('fileuploaddragover', function (e) {alert('Hola soy 14');})
-//                .bind('fileuploadchunksend', function (e, data) {alert('Hola soy 15');})
-//                .bind('fileuploadchunkdone', function (e, data) {alert('Hola soy 16');})
-//                .bind('fileuploadchunkfail', function (e, data) {alert('Hola soy 17');})
-//                .bind('fileuploadchunkalways', function (e, data) {alert('Hola soy 18');})
-//                .bind('fileuploaddestroy', function (e, data) {alert('Hola soy 19')})
-//                .bind('fileuploaddestroyed', function (e, data) {alert('Hola soy 20')})
+                    console.log('se han subido estas fotos' + ' ' + totalFotos);
+                    $('#texto').text('Calculando fotos a subir')
+                    $('#fotoInicio').text('0');
+                    $('#fotoFinal').text(totalFotos);
+                    
+                })
+                .bind('fileuploadsubmit', function (e, data) {
+                    console.log('imagen enviada al servidor');                        
+                })
                 .bind('fileuploadadded', function (e, data) {
                     cargados+=1;
-                    console.log('Se an cargado estas fotos'+' '+cargados);
-
-                    if(cargados == totalFotos){
-                        alert("Ya se cargaron las fotos ");
+                    $('#texto').text('Preparando fotos a subir')
+                    $('#fotoFinal').text(cargados);
+                    console.log('Se han cargado estas fotos'+' '+cargados);
+                    if(cargados == totalFotos){                        
+                        start();
                     }
                 })
-//                .bind('fileuploadsent', function (e, data) {alert('Hola soy 22')})
-//                .bind('fileuploadcompleted', function (e, data) {alert('Hola soy 23')})
-//                .bind('fileuploadfailed', function (e, data) {alert('Hola soy 24')})
-//                .bind('fileuploadfinished', function (e, data) {alert('Hola soy 25')})
-//                .bind('fileuploadstarted', function (e) {alert('Hola soy 26')})
-                .bind('fileuploadstopped', function (e) { });
+                .bind('fileuploadchange', function (e, data) { 
+                    $('#loadigText').css('display','block');
+                    $('.files').css('display','none');
+                })
+                .bind('fileuploadfinished', function (e, data) {                     
+                    if( subidas < cargados ){
+                        start();
+                    }else{
+                        $('#texto').text('Ha finalizado la carga de imagenes exitosamente')
+                        $('#gif').css('display','none');
+                    }
+                });
+        
+        function start(){
+            subidas +=1
+            files = $('.files .template-upload .start');
+            $(files.first()).click(); 
+            $('#texto').text('Subiendo fotos')
+            $('#fotoInicio').text(subidas);
+            $('#fotoFinal').text(totalFotos);
+        }
 
     });
 
