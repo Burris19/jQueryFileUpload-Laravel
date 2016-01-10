@@ -15,5 +15,5 @@ Route::get('/', function () {
     return view('upload');
 });
 
-Route::post('upload','UploadController@upload');
+Route::post('prueba','UploadController@upload');
 
