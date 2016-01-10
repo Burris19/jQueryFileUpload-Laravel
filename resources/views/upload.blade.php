@@ -8,7 +8,13 @@
 	<form action="upload" id="formulario" class="formulario">
         <input type="file" multiple="multiple" id="file"/>        
         <input type="hidden" name="_token" value="{!! csrf_token() !!}"  id="token">
-        
+        <p id="loadigText" style="display:none">            
+            <span id="texto">Subiendo imagenes</span>                    
+            <span id="fotoInicio">0</span>
+            de
+            <span id="fotoFinal"></span>                    
+            <img src="ajax-loader.gif" id="gif">
+        </p> 
 	</form>
     <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
     <script>
@@ -26,6 +32,8 @@
                     total +=1;
                 }
                 if (total > 0) {
+                    $('#fotoFinal').text(total);
+                    $('#loadigText').css('display','block');
                     sendFile();
                 }
             }            
@@ -43,6 +51,7 @@
                     processData: false,
                     success: function(response){
                         subidas +=1;
+                        $('#fotoInicio').text(subidas);
                         console.log(response);                        
                     },
                     error: function(erro){
@@ -53,6 +62,9 @@
                         photos.pop();
                         if ( subidas < total){
                             sendFile();
+                        }else {
+                            $('#texto').text('Las imagenes se han subido exitosamente');   
+                            $('#gif').css('display', 'none');
                         }
                     }                    
                 });
