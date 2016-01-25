@@ -44,17 +44,17 @@
                 
                 console.log("El tamano total es " + sizeTotal);
                 
-//                var filess = document.getElementById("file").files;                                
-//                for (var i = 0; i < filess.length; i++ ){                     
-//                    photos.push(filess[i]);
-//                    total +=1;
-//                }
+                var filess = document.getElementById("file").files;
+                for (var i = 0; i < filess.length; i++ ){
+                    photos.push(filess[i]);
+                    total +=1;
+                }
                 
-//                if (total > 0) {
-//                    $('#fotoFinal').text(total);
-//                    $('#loadigText').css('display','block');
-//                    sendFile();
-//                }
+                if (total > 0) {
+                    $('#fotoFinal').text(total);
+                    $('#loadigText').css('display','block');
+                    sendFile();
+                }
             }            
             function sendFile(indice){                
                 var token = $("#token").val();
